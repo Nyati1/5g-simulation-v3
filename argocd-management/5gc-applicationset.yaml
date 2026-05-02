@@ -1,0 +1,30 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: 5g-simulation-deployments
+  namespace: argocd
+spec:
+  generators:
+    - list:
+        elements:
+          - instance: "core-1"
+            mcc: "302"
+            mnc: "220"
+  template:
+    metadata:
+      name: '{{instance}}-dev' # This will result in "core-1-dev"
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+        targetRevision: HEAD
+        path: env/dev # Points to your current dev overlay
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: '5g-{{instance}}'
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true

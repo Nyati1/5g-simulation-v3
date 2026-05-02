@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open5gs-amf
+spec:
+  template:
+    spec:
+      containers:
+      - name: amf
+        image: gradiant/open5gs-amf:latest
+        env:
+        - name: MCC
+          valueFrom:
+            configMapKeyRef:
+              name: open5gs-config
+              key: mcc
+        - name: MNC
+          valueFrom:
+            configMapKeyRef:
+              name: open5gs-config
+              key: mnc
