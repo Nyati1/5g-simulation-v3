@@ -13,11 +13,12 @@ spec:
         app: open5gs-amf # This identifies the pods created by this deployment
     spec:
       containers:
-      - name: amf
-        image: docker.io/gradiant/open5gs:2.7.0
-        imagePullPolicy: IfNotPresent
+         - args:
+            - open5gs-amfd
+           image: docker.io/gradiant/open5gs:2.7.0
+           imagePullPolicy: IfNotPresent
         
-        env:
+      env:
         - name: MCC
           valueFrom:
             configMapKeyRef:
