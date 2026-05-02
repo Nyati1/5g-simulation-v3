@@ -3,7 +3,14 @@ kind: Deployment
 metadata:
   name: open5gs-amf
 spec:
+  replicas: 1 # Added for clarity
+  selector:
+    matchLabels:
+      app: open5gs-amf # This must match the template labels below
   template:
+    metadata:
+      labels:
+        app: open5gs-amf # This identifies the pods created by this deployment
     spec:
       containers:
       - name: amf
