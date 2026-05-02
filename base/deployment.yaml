@@ -14,7 +14,9 @@ spec:
     spec:
       containers:
       - name: amf
-        image: gradiant/open5gs-amf:2.7.0
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        
         env:
         - name: MCC
           valueFrom:
