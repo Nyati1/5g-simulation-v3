@@ -19,14 +19,14 @@ spec:
            image: docker.io/gradiant/open5gs:2.7.0
            imagePullPolicy: IfNotPresent
         
-      env:
-        - name: MCC
-          valueFrom:
-            configMapKeyRef:
-              name: open5gs-config
-              key: mcc
-        - name: MNC
-          valueFrom:
-            configMapKeyRef:
-              name: open5gs-config
-              key: mnc
+           env:  
+            - name: MCC
+              valueFrom:
+                configMapKeyRef:
+                  name: open5gs-config
+                  key: mcc
+            - name: MNC
+              valueFrom:
+                configMapKeyRef:
+                  name: open5gs-config
+                  key: mnc
