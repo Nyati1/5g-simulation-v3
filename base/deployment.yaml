@@ -13,7 +13,8 @@ spec:
         app: open5gs-amf # This identifies the pods created by this deployment
     spec:
       containers:
-         - args:
+         - name: open5gs-amf
+           args:
             - open5gs-amfd
            image: docker.io/gradiant/open5gs:2.7.0
            imagePullPolicy: IfNotPresent
