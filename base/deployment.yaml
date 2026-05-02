@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: amf
-        image: gradiant/open5gs-amf:latest
+        image: gradiant/open5gs-amf:2.7.0
         env:
         - name: MCC
           valueFrom:
