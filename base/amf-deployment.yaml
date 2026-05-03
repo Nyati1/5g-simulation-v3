@@ -19,20 +19,11 @@ spec:
       - name: amf
         image: docker.io/gradiant/open5gs:2.7.0
         imagePullPolicy: IfNotPresent
-        # The command wrapper creates the file before starting the binary
-        command: ["/bin/sh", "-c"]
         args:
-          - |
-            echo "$AMF_CONFIG" > /tmp/amf.yaml
-            exec open5gs-amfd -c /tmp/amf.yaml
+          - open5gs-amfd
         env:
-          - name: AMF_CONFIG
-            value: |
-              amf:
-                sbi:
-                  server:
-                    - address: 0.0.0.0
-                      port: 7777
+          - name: OGS_LOG_LEVEL
+            value: error  
           - name: MCC
             valueFrom:
               configMapKeyRef:
