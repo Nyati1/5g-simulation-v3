@@ -29,6 +29,8 @@ spec:
             name: gtpu
             protocol: UDP
         env:
+          - name: OGS_LOG_LEVEL
+            value: error
           - name: MCC
             valueFrom:
               configMapKeyRef:
