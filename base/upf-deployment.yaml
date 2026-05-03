@@ -20,7 +20,11 @@ spec:
         image: docker.io/gradiant/open5gs:2.7.0
         imagePullPolicy: IfNotPresent
         args:
-          - open5gs-upfd  
+          - open5gs-upfd 
+        securityContext:
+          capabilities:
+            add: 
+              - NET_ADMIN
         ports:
           - containerPort: 2152
             name: gtpu
