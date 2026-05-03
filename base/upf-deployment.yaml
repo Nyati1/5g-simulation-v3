@@ -20,15 +20,21 @@ spec:
         image: docker.io/gradiant/open5gs:2.7.0
         imagePullPolicy: IfNotPresent
         args:
-          - open5gs-upfd 
+          - open5gs-upfd
         securityContext:
-          capabilities:
-            add: 
-              - NET_ADMIN
+          privileged: true  
         ports:
           - containerPort: 2152
             name: gtpu
             protocol: UDP
-          - containerPort: 8805
-            name: pfcp
-            protocol: UDP
+        env:
+          - name: MCC
+            valueFrom:
+              configMapKeyRef:
+                name: open5gs-config
+                key: mcc
+          - name: MNC
+            valueFrom:
+              configMapKeyRef:
+                name: open5gs-config
+                key: mnc
