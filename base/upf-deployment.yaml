@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open5gs-upf
+  namespace: 5g-core-1
+  labels:
+    app: open5gs-upf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: open5gs-upf
+  template:
+    metadata:
+      labels:
+        app: open5gs-upf
+    spec:
+      containers:
+      - name: upf
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - open5gs-upfd  
+        ports:
+          - containerPort: 2152
+            name: gtpu
+            protocol: UDP
+          - containerPort: 8805
+            name: pfcp
+            protocol: UDP
