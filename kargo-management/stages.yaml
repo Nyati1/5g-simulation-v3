@@ -1,0 +1,76 @@
+# stages.yaml
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: dev
+  namespace: 5g-network-simulation
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: 5g-sim-warehouse
+    sources:
+      direct: true
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-update
+        config:
+          repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+          checkoutBranch: main
+          outBranch: main
+          kustomize:
+            images:
+            - image: docker.io/gradiant/open5gs
+              path: env/dev
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: staging
+  namespace: 5g-network-simulation
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: 5g-sim-warehouse
+    sources:
+      stages: [dev]
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-update
+        config:
+          repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+          checkoutBranch: main
+          outBranch: main
+          kustomize:
+            images:
+            - image: docker.io/gradiant/open5gs
+              path: env/staging
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Stage
+metadata:
+  name: prod
+  namespace: 5g-network-simulation
+spec:
+  requestedFreight:
+  - origin:
+      kind: Warehouse
+      name: 5g-sim-warehouse
+    sources:
+      stages: [staging]
+  promotionTemplate:
+    spec:
+      steps:
+      - uses: git-update
+        config:
+          repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+          checkoutBranch: main
+          outBranch: main
+          kustomize:
+            images:
+            - image: docker.io/gradiant/open5gs
+              path: env/prod
