@@ -4,40 +4,39 @@ metadata:
   name: open5gs-upf
   namespace: 5g-core-1
   labels:
-    app: open5gs-upf
+    app: upf
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: open5gs-upf
+      app: upf
   template:
     metadata:
       labels:
-        app: open5gs-upf
+        app: upf
     spec:
       containers:
-      - name: upf
-        image: docker.io/gradiant/open5gs:2.7.0
-        imagePullPolicy: IfNotPresent
-        args:
-          - open5gs-upfd
-          - -n
-        securityContext:
-          privileged: true  
-        ports:
-          - containerPort: 2152
-            name: gtpu
-            protocol: UDP
-        env:
-          - name: OGS_LOG_LEVEL
-            value: error
-          - name: MCC
-            valueFrom:
-              configMapKeyRef:
-                name: open5gs-config
-                key: mcc
-          - name: MNC
-            valueFrom:
-              configMapKeyRef:
-                name: open5gs-config
-                key: mnc
+        - name: upf
+          image: docker.io/gradiant/open5gs:2.7.0
+          imagePullPolicy: IfNotPresent
+          args:
+            - open5gs-upfd
+          securityContext:
+            privileged: true
+          ports:
+            - containerPort: 2152
+              name: gtpu
+              protocol: UDP
+          env:
+            - name: OGS_LOG_LEVEL
+              value: error
+            - name: MCC
+              valueFrom:
+                configMapKeyRef:
+                  name: open5gs-config
+                  key: mcc
+            - name: MNC
+              valueFrom:
+                configMapKeyRef:
+                  name: open5gs-config
+                  key: mnc
