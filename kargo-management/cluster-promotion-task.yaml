@@ -1,0 +1,12 @@
+# cluster-promotion-tasks.yaml
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ClusterPromotionTask
+metadata:
+  name: git-update
+spec: {} # Empty spec triggers the built-in runner discovery
+---
+apiVersion: kargo.akuity.io/v1alpha1
+kind: ClusterPromotionTask
+metadata:
+  name: argocd-update
+spec: {} # Empty spec triggers the built-in runner discovery
