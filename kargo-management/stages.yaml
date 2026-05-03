@@ -6,7 +6,7 @@ metadata:
   name: dev
   namespace: 5g-network-simulation
 spec:
-  promotionPolicy: Auto  
+  
   requestedFreight:
   - origin:
       kind: Warehouse
@@ -25,7 +25,6 @@ spec:
             images:
             - image: docker.io/gradiant/open5gs
               path: env/dev
-      # This triggers Argo CD to pull the new MCC/MNC changes immediately
       - uses: argocd-update
         config:
           apps:
