@@ -16,6 +16,7 @@ spec:
          - name: open5gs-amf
            args:
             - open5gs-amfd
+            - -n
            image: docker.io/gradiant/open5gs:2.7.0
            imagePullPolicy: IfNotPresent
         

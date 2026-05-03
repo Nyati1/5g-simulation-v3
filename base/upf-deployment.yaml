@@ -21,6 +21,7 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
           - open5gs-upfd
+          - -n
         securityContext:
           privileged: true  
         ports:
