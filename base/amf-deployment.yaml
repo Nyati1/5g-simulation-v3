@@ -2,33 +2,44 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: open5gs-amf
+  namespace: 5g-core-1
+  labels:
+    app: open5gs-amf
 spec:
-  replicas: 1 # Added for clarity
+  replicas: 1
   selector:
     matchLabels:
-      app: open5gs-amf # This must match the template labels below
+      app: open5gs-amf
   template:
     metadata:
       labels:
-        app: open5gs-amf # This identifies the pods created by this deployment
+        app: open5gs-amf
     spec:
       containers:
-         - name: open5gs-amf
-           args:
-            - open5gs-amfd
-            - -n
-            - --no-sbi
-           image: docker.io/gradiant/open5gs:2.7.0
-           imagePullPolicy: IfNotPresent
-        
-           env:  
-            - name: MCC
-              valueFrom:
-                configMapKeyRef:
-                  name: open5gs-config
-                  key: mcc
-            - name: MNC
-              valueFrom:
-                configMapKeyRef:
-                  name: open5gs-config
-                  key: mnc
+      - name: amf
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        # The command wrapper creates the file before starting the binary
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            echo "$AMF_CONFIG" > /tmp/amf.yaml
+            exec open5gs-amfd -c /tmp/amf.yaml
+        env:
+          - name: AMF_CONFIG
+            value: |
+              amf:
+                sbi:
+                  server:
+                    - address: 0.0.0.0
+                      port: 7777
+          - name: MCC
+            valueFrom:
+              configMapKeyRef:
+                name: open5gs-config
+                key: mcc
+          - name: MNC
+            valueFrom:
+              configMapKeyRef:
+                name: open5gs-config
+                key: mnc
