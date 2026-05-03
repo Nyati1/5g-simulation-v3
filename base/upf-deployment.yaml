@@ -1,41 +1,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: 5g-network-simulation:apps/Deployment:5g-lab/open5gs-upf
   name: open5gs-upf
-  namespace: 5g-core-1
-  labels:
-    app: open5gs-upf
+  namespace: 5g-lab
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
-      app: open5gs-upf
+      app: upf
   template:
     metadata:
       labels:
-        app: open5gs-upf
+        app: upf
     spec:
       containers:
-      - name: upf
-        image: docker.io/gradiant/open5gs:2.7.0
-        imagePullPolicy: IfNotPresent
-        args:
-          - open5gs-upfd
-          - -n
-        securityContext:
-          privileged: true  
-        ports:
-          - containerPort: 2152
-            name: gtpu
-            protocol: UDP
-        env:
-          - name: MCC
-            valueFrom:
-              configMapKeyRef:
-                name: open5gs-config
-                key: mcc
-          - name: MNC
-            valueFrom:
-              configMapKeyRef:
-                name: open5gs-config
-                key: mnc
+        - args:
+            - open5gs-upfd
+          image: docker.io/gradiant/open5gs:2.7.0
+          name: upf
+          ports:
+            - containerPort: 2152
+              name: gtpu
+              protocol: UDP
+          securityContext:
+            privileged: true

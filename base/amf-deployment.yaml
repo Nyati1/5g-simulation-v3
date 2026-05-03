@@ -1,36 +1,26 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  annotations:
+    argocd.argoproj.io/tracking-id: 5g-network-simulation:apps/Deployment:5g-lab/open5gs-amf
   name: open5gs-amf
-  namespace: 5g-core-1
-  labels:
-    app: open5gs-amf
+  namespace: 5g-lab
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: open5gs-amf
+      app: amf
   template:
     metadata:
       labels:
-        app: open5gs-amf
+        app: amf
     spec:
       containers:
-      - name: amf
-        image: docker.io/gradiant/open5gs:2.7.0
-        imagePullPolicy: IfNotPresent
-        args:
-          - open5gs-amfd
-        env:
-          - name: OGS_LOG_LEVEL
-            value: error  
-          - name: MCC
-            valueFrom:
-              configMapKeyRef:
-                name: open5gs-config
-                key: mcc
-          - name: MNC
-            valueFrom:
-              configMapKeyRef:
-                name: open5gs-config
-                key: mnc
+        - args:
+            - open5gs-amfd
+          image: docker.io/gradiant/open5gs:2.7.0
+          name: amf
+          ports:
+            - containerPort: 38412
+              name: ngap
+              protocol: SCTP
