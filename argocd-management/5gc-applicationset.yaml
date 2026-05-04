@@ -9,7 +9,7 @@ spec:
         elements:
           - instance: "core-1"
             mcc: "302"
-            mnc: "220"
+            mnc: "210"
   template:
     metadata:
       name: '{{instance}}-dev' # This will result in "core-1-dev"
