@@ -7,15 +7,7 @@ spec:
   steps:
     - uses: git-clone
     - uses: kustomize-set-image
-      config:
-        images:
-          - image: docker.io/gradiant/open5gs:2.7.0
-            path: env/dev
     - uses: git-commit-push
-      config:
-        repoURL: https://github.com/Nyati1/5g-simulation-v3.git
-        checkoutBranch: main
-        outBranch: main
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: PromotionTask
@@ -25,7 +17,3 @@ metadata:
 spec:
   steps:
     - uses: argocd-sync
-      config:
-        apps:
-          - name: 5g-sim-dev
-            namespace: argocd
