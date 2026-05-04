@@ -1,15 +1,17 @@
 apiVersion: kargo.akuity.io/v1alpha1
-kind: ClusterPromotionTask
+kind: PromotionTask
 metadata:
   name: git-update
+  namespace: 5g-network-simulation
 spec:
   steps:
     - uses: git-update
 ---
 apiVersion: kargo.akuity.io/v1alpha1
-kind: ClusterPromotionTask
+kind: PromotionTask
 metadata:
   name: argocd-update
+  namespace: 5g-network-simulation
 spec:
   steps:
     - uses: argocd-update
