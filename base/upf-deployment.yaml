@@ -4,30 +4,30 @@ metadata:
   name: open5gs-upf
   namespace: 5g-core-1
   labels:
-    app: upf  # Borrowed from working config
+    app: upf  
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: upf  # Borrowed from working config
+      app: upf  
   template:
     metadata:
       labels:
-        app: upf  # Borrowed from working config
+        app: upf  
     spec:
       containers:
       - name: upf
         image: docker.io/gradiant/open5gs:2.7.0
         imagePullPolicy: IfNotPresent
         args:
-          - open5gs-upfd  # Borrowed from working config
+          - open5gs-upfd  
         securityContext:
-          privileged: true  # Borrowed from working config
+          privileged: true  
         ports:
           - containerPort: 2152
             name: gtpu
             protocol: UDP
-        # Restoring your specific demo parameters
+      
         env:
           - name: MCC
             valueFrom:
