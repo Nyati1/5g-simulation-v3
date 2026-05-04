@@ -5,26 +5,71 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - list:
-        elements:
-          - instance: "core-1"
-            mcc: "302"
-            mnc: "210"
+    - matrix:
+        generators:
+          # 1. The "What": Your 5G Core Elements with unique parameters
+          - list:
+              elements:
+                - instance: "core-1"
+                  mcc: "302"
+                  mnc: "210"
+                - instance: "core-2"
+                  mcc: "302"
+                  mnc: "220"
+          # 2. The "Where": Your Promotion Stages
+          - list:
+              elements:
+                - env: "dev"
+                - env: "staging"
+                - env: "prod"
   template:
     metadata:
-      name: '{{instance}}-dev' # This will result in "core-1-dev"
+      # Results in core-1-dev, core-1-staging, core-1-prod, etc.
+      name: '{{instance}}-{{env}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
         targetRevision: HEAD
-        path: env/dev # Points to your current dev overlay
+        # This dynamic path is the key: Kargo updates these specific folders
+        path: 'env/{{env}}' 
       destination:
         server: https://kubernetes.default.svc
-        namespace: '5g-{{instance}}'
+        # Automatically organizes cores into environment-specific namespaces
+        namespace: '5g-{{instance}}-{{env}}'
       syncPolicy:
         automated:
           prune: true
           selfHeal: true
         syncOptions:
           - CreateNamespace=true
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: 5g-simulation-deployments
+#   namespace: argocd
+# spec:
+#   generators:
+#     - list:
+#         elements:
+#           - instance: "core-1"
+#             mcc: "302"
+#             mnc: "210"
+#   template:
+#     metadata:
+#       name: '{{instance}}-dev' # This will result in "core-1-dev"
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+#         targetRevision: HEAD
+#         path: env/dev # Points to your current dev overlay
+#       destination:
+#         server: https://kubernetes.default.svc
+#         namespace: '5g-{{instance}}'
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
+#         syncOptions:
+#           - CreateNamespace=true
