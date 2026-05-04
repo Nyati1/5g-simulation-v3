@@ -5,15 +5,13 @@ metadata:
   namespace: 5g-network-simulation
 spec:
   steps:
-    - uses: git-update
+    - uses: git-clone
+    - uses: kustomize-edit
+    - uses: git-commit-push
       config:
         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
         checkoutBranch: main
         outBranch: main
-        kustomize:
-          images:
-            - image: docker.io/gradiant/open5gs
-              path: env/dev
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: PromotionTask
@@ -22,7 +20,7 @@ metadata:
   namespace: 5g-network-simulation
 spec:
   steps:
-    - uses: argocd-update
+    - uses: argocd-sync
       config:
         apps:
           - name: 5g-sim-dev
