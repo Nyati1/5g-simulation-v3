@@ -11,7 +11,7 @@ spec:
           - list:
               elements:
                 - instance: "core-1"
-                  mcc: "302"
+                  mcc: "301"
                   mnc: "210"
                 - instance: "core-2"
                   mcc: "302"
