@@ -3,13 +3,13 @@ kind: ClusterPromotionTask
 metadata:
   name: git-update
 spec:
-  runner:
-    builtin: git-update
+  steps:
+    - uses: git-update
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: ClusterPromotionTask
 metadata:
   name: argocd-update
 spec:
-  runner:
-    builtin: argocd-update
+  steps:
+    - uses: argocd-update
