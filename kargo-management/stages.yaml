@@ -12,50 +12,29 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-update
+      - uses: git-clone
         config:
           repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+          checkoutBranch: main
           credentials:
             name: github-git-creds
-          checkoutBranch: main
-          outBranch: env/dev
-          kustomize:
-            images:
-            - image: docker.io/gradiant/open5gs
-              path: env/dev
-      - uses: argocd-update
-        config:
-          apps:
-          - name: 5g-sim-dev
-            namespace: argocd
 
----
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Stage
-metadata:
-  name: staging
-  namespace: 5g-network-simulation
-spec:
-  requestedFreight:
-    - origin:
-        kind: Warehouse
-        name: 5g-sim-warehouse
-      sources:
-        stages: [dev]
-  promotionTemplate:
-    spec:
-      steps:
-      - uses: git-update
-        config:
+      - uses: kustomize-set-imagegit 
           repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+          checkoutBranch: main
           credentials:
             name: github-git-creds
-          checkoutBranch: main
+
+      - uses: kustomize-set-image
+        config:
+          images:
+          - image: docker.io/gradiant/open5gs
+            path: env/staging
+
+      - uses: git-commit-push
+        config:
           outBranch: env/staging
-          kustomize:
-            images:
-            - image: docker.io/gradiant/open5gs
-              path: env/staging
+
       - uses: argocd-update
         config:
           apps:
@@ -78,56 +57,25 @@ spec:
   promotionTemplate:
     spec:
       steps:
-      - uses: git-update
+      - uses: git-clone
         config:
           repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+          checkoutBranch: main
           credentials:
             name: github-git-creds
-          checkoutBranch: main
+
+      - uses: kustomize-set-image
+        config:
+          images:
+          - image: docker.io/gradiant/open5gs
+            path: env/prod
+
+      - uses: git-commit-push
+        config:
           outBranch: env/prod
-          kustomize:
-            images:
-            - image: docker.io/gradiant/open5gs
-              path: env/prod
+
       - uses: argocd-update
         config:
           apps:
           - name: 5g-sim-prod
             namespace: argocd
-# ---
-# apiVersion: kargo.akuity.io/v1alpha1
-# kind: Stage
-# metadata:
-#   name: dev
-#   namespace: 5g-network-simulation
-# spec:
-#   requestedFreight:
-#     - origin:
-#         kind: Warehouse
-#         name: 5g-sim-warehouse
-# ---
-# apiVersion: kargo.akuity.io/v1alpha1
-# kind: Stage
-# metadata:
-#   name: staging
-#   namespace: 5g-network-simulation
-# spec:
-#   requestedFreight:
-#     - origin:
-#         kind: Warehouse
-#         name: 5g-sim-warehouse
-#       sources:
-#         stages: [dev]
-# ---
-# apiVersion: kargo.akuity.io/v1alpha1
-# kind: Stage
-# metadata:
-#   name: prod
-#   namespace: 5g-network-simulation
-# spec:
-#   requestedFreight:
-#     - origin:
-#         kind: Warehouse
-#         name: 5g-sim-warehouse
-#       sources:
-#         stages: [staging]
