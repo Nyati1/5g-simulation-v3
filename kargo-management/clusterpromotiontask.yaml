@@ -16,4 +16,12 @@ metadata:
   namespace: 5g-network-simulation
 spec:
   steps:
-    - uses: argocd-sync
+    - uses: argocd-update
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: PromotionTask
+# metadata:
+#   name: argocd-update
+#   namespace: 5g-network-simulation
+# spec:
+#   steps:
+#     - uses: argocd-sync
