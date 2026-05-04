@@ -6,8 +6,18 @@ metadata:
 spec:
   steps:
     - uses: git-clone
+      config:
+        repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+        checkoutBranch: main
+
     - uses: kustomize-set-image
+      config:
+        path: .
+
     - uses: git-commit-push
+      config:
+        repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+        branch: main
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: PromotionTask
@@ -16,7 +26,23 @@ metadata:
   namespace: 5g-network-simulation
 spec:
   steps:
-    - uses: argocd-update
+    - uses: argocd-sync
+      config:
+        apps:
+          - name: 5g-sim-dev
+            namespace: argocd
+
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: PromotionTask
+# metadata:
+#   name: git-update
+#   namespace: 5g-network-simulation
+# spec:
+#   steps:
+#     - uses: git-clone
+#     - uses: kustomize-set-image
+#     - uses: git-commit-push
+# ---
 # apiVersion: kargo.akuity.io/v1alpha1
 # kind: PromotionTask
 # metadata:
@@ -24,4 +50,12 @@ spec:
 #   namespace: 5g-network-simulation
 # spec:
 #   steps:
-#     - uses: argocd-sync
+#     - uses: argocd-update
+# # apiVersion: kargo.akuity.io/v1alpha1
+# # kind: PromotionTask
+# # metadata:
+# #   name: argocd-update
+# #   namespace: 5g-network-simulation
+# # spec:
+# #   steps:
+# #     - uses: argocd-sync
