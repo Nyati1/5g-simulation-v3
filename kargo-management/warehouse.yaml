@@ -8,3 +8,4 @@ spec:
     - git:
         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
         branch: main
+
