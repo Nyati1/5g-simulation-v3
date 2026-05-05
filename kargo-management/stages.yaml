@@ -4,6 +4,8 @@ metadata:
   name: dev
   namespace: 5g-network-simulation
 spec:
+  promotionPolicy:
+    autoPromotionEnabled: true
   requestedFreight:
   - origin:
       kind: Warehouse
