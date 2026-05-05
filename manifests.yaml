@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   mcc: "1000"
-  mnc: "101"
+  mnc: "102"
 kind: ConfigMap
 metadata:
   name: open5gs-config
