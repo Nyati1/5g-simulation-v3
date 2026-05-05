@@ -20,7 +20,7 @@ spec:
         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
         targetRevision: HEAD
         # Points to the environment folders in your v3 repo
-        path: 'envs/{{env}}' 
+        path: 'env/{{env}}' 
       destination:
         server: https://kubernetes.default.svc
         # Keeps namespaces clean: 5g-core-1-dev, 5g-core-1-prod, etc.
