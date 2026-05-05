@@ -4,3 +4,7 @@ metadata:
   name: 5g-network-simulation
   annotations:
     argocd.argoproj.io/sync-wave: "-1"
+spec:
+  promotionPolicies:
+  - stage: dev
+    autoPromotionEnabled: true
