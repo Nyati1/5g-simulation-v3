@@ -1,8 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: open5gs-upf
-  namespace: 5g-core-1
+  name: open5gs-upf 
   labels:
     app: upf  
 spec:
@@ -27,7 +26,6 @@ spec:
           - containerPort: 2152
             name: gtpu
             protocol: UDP
-      
         env:
           - name: MCC
             valueFrom:
