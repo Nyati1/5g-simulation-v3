@@ -9,4 +9,4 @@ configMapGenerator:
   behavior: merge
   literals:
     - mcc="1000"
-    - mnc="100"
+    - mnc="101"
