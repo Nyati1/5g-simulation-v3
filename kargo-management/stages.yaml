@@ -4,18 +4,19 @@ metadata:
   name: dev
   namespace: 5g-network-simulation
 spec:
-  
   requestedFreight:
   - origin:
       kind: Warehouse
       name: 5g-sim-warehouse
     sources:
       direct: true
+
   promotionTemplate:
     spec:
       vars:
       - name: gitRepo
         value: https://github.com/Nyati1/5g-simulation-v3.git
+
       steps:
       - uses: git-clone
         config:
@@ -23,25 +24,69 @@ spec:
           checkout:
           - branch: main
             path: ./src
-          - branch: env/dev
-            create: true
-            path: ./out
-      - uses: git-clear
-        config:
-          path: ./out
+
       - uses: kustomize-build
         config:
           path: ./src/env/dev
-          outPath: ./out/manifests.yaml
+          outPath: ./src/env/dev/manifests.yaml
+
       - uses: git-commit
         as: commit
         config:
-          path: ./out
+          path: ./src
           message: Promote dev config change
+
       - uses: git-push
         config:
-          path: ./out
-          targetBranch: env/dev
+          path: ./src
+          targetBranch: main
+
+
+
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: Stage
+# metadata:
+#   name: dev
+#   namespace: 5g-network-simulation
+# spec:
+  
+#   requestedFreight:
+#   - origin:
+#       kind: Warehouse
+#       name: 5g-sim-warehouse
+#     sources:
+#       direct: true
+#   promotionTemplate:
+#     spec:
+#       vars:
+#       - name: gitRepo
+#         value: https://github.com/Nyati1/5g-simulation-v3.git
+#       steps:
+#       - uses: git-clone
+#         config:
+#           repoURL: ${{ vars.gitRepo }}
+#           checkout:
+#           - branch: main
+#             path: ./src
+#           - branch: env/dev
+#             create: true
+#             path: ./out
+#       - uses: git-clear
+#         config:
+#           path: ./out
+#       - uses: kustomize-build
+#         config:
+#           path: ./src/env/dev
+#           outPath: ./out/manifests.yaml
+#       - uses: git-commit
+#         as: commit
+#         config:
+#           path: ./out
+#           message: Promote dev config change
+#       - uses: git-push
+#         config:
+#           path: ./out
+#           targetBranch: env/dev
       # - uses: argocd-update
       #   config:
       #     apps:
