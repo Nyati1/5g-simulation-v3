@@ -5,44 +5,91 @@ metadata:
   namespace: argocd
 spec:
   generators:
-    - matrix:
-        generators:
-          # 1. The "What": Your 5G Core Elements with unique parameters
-          - list:
-              elements:
-                - instance: "core-1"
-                  mcc: "301"
-                  mnc: "210"
-                - instance: "core-2"
-                  mcc: "302"
-                  mnc: "220"
-          # 2. The "Where": Your Promotion Stages
-          - list:
-              elements:
-                - env: "dev"
-                - env: "staging"
-                - env: "prod"
+    - list:
+        elements:
+          - env: "dev"
+          - env: "staging"
+          - env: "prod"
   template:
     metadata:
-      # Results in core-1-dev, core-1-staging, core-1-prod, etc.
-      name: '{{instance}}-{{env}}'
+      # Results in: core-1-dev, core-1-staging, core-1-prod
+      name: 'core-1-{{env}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
         targetRevision: HEAD
-        # This dynamic path is the key: Kargo updates these specific folders
-        path: 'env/{{env}}' 
+        # Points to the environment folders in your v3 repo
+        path: 'envs/{{env}}' 
       destination:
         server: https://kubernetes.default.svc
-        # Automatically organizes cores into environment-specific namespaces
-        namespace: '5g-{{instance}}-{{env}}'
+        # Keeps namespaces clean: 5g-core-1-dev, 5g-core-1-prod, etc.
+        namespace: '5g-core-1-{{env}}'
       syncPolicy:
         automated:
           prune: true
-          selfHeal: true
+          selfHeal: true # Essential for your drift/self-healing demo
         syncOptions:
           - CreateNamespace=true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: ApplicationSet
+# metadata:
+#   name: 5g-simulation-deployments
+#   namespace: argocd
+# spec:
+#   generators:
+#     - matrix:
+#         generators:
+#           # 1. The "What": Your 5G Core Elements with unique parameters
+#           - list:
+#               elements:
+#                 - instance: "core-1"
+#                   mcc: "301"
+#                   mnc: "210"
+#                 - instance: "core-2"
+#                   mcc: "302"
+#                   mnc: "220"
+#           # 2. The "Where": Your Promotion Stages
+#           - list:
+#               elements:
+#                 - env: "dev"
+#                 - env: "staging"
+#                 - env: "prod"
+#   template:
+#     metadata:
+#       # Results in core-1-dev, core-1-staging, core-1-prod, etc.
+#       name: '{{instance}}-{{env}}'
+#     spec:
+#       project: default
+#       source:
+#         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+#         targetRevision: HEAD
+#         # This dynamic path is the key: Kargo updates these specific folders
+#         path: 'env/{{env}}' 
+#       destination:
+#         server: https://kubernetes.default.svc
+#         # Automatically organizes cores into environment-specific namespaces
+#         namespace: '5g-{{instance}}-{{env}}'
+#       syncPolicy:
+#         automated:
+#           prune: true
+#           selfHeal: true
+#         syncOptions:
+#           - CreateNamespace=true
 # apiVersion: argoproj.io/v1alpha1
 # kind: ApplicationSet
 # metadata:
