@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: production
+  namespace: akuity
+
+spec:
+  sourceRepos:
+    - '*'
+
+  destinations:
+    - namespace: '*'
+      server: '*'
+
+  syncWindows:
+    - kind: allow
+      schedule: "0 0 * * *"
+      duration: 3h
+      applications:
+        - core-1-prod-2
