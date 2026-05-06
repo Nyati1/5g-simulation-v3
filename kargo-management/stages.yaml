@@ -10,11 +10,13 @@ spec:
       name: 5g-sim-warehouse
     sources:
       direct: true
+
   promotionTemplate:
     spec:
       vars:
       - name: gitRepo
         value: https://github.com/Nyati1/5g-simulation-v3.git
+
       steps:
       - uses: git-clone
         config:
@@ -22,9 +24,11 @@ spec:
           checkout:
           - branch: main
             path: ./src
+
       - uses: kustomize-build
         config:
           path: ./src/env/dev
+          outPath: ./src/env/dev/rendered.yaml
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
