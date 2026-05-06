@@ -24,7 +24,6 @@ spec:
           checkout:
           - branch: main
             path: ./src
-            
 
       - uses: kustomize-build
         config:
@@ -47,7 +46,6 @@ kind: Stage
 metadata:
   name: staging
   namespace: 5g-network-simulation
-
 spec:
   requestedFreight:
   - origin:
@@ -84,55 +82,6 @@ spec:
         config:
           path: ./src
           targetBranch: main
-# apiVersion: kargo.akuity.io/v1alpha1
-# kind: Stage
-# metadata:
-#   name: staging
-#   namespace: 5g-network-simulation
-# spec:
-#   requestedFreight:
-#   - origin:
-#       kind: Warehouse
-#       name: 5g-sim-warehouse
-#     sources:
-#       stages: [dev]
-#   promotionTemplate:
-#     spec:
-#       vars:
-#       - name: gitRepo
-#         value: https://github.com/Nyati1/5g-simulation-v3.git
-#       steps:
-#       - uses: git-clone
-#         config:
-#           repoURL: ${{ vars.gitRepo }}
-#           checkout:
-#           - branch: main
-#             path: ./src
-#           - branch: env/staging
-#             create: true
-#             path: ./out
-#       - uses: git-clear
-#         config:
-#           path: ./out
-#       - uses: copy
-#         config:
-#           inPath: ./src/env/dev/kustomization.yaml
-#           outPath: ./src/env/staging/kustomization.yaml
-
-#       - uses: kustomize-build
-#         config:
-#           path: ./src/env/staging
-#           outPath: ./out/manifests.yaml
-#       - uses: git-commit
-#         as: commit
-#         config:
-#           path: ./out
-#           message: Promote dev config to staging
-#       - uses: git-push
-#         config:
-#           path: ./out
-#           targetBranch: env/staging
-    
 ---
 apiVersion: kargo.akuity.io/v1alpha1
 kind: Stage
@@ -148,40 +97,219 @@ spec:
       stages: [staging]
 
   promotionTemplate:
-  spec:
-    vars:
-    - name: gitRepo
-      value: https://github.com/Nyati1/5g-simulation-v3.git
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/Nyati1/5g-simulation-v3.git
 
-    steps:
-    - uses: git-clone
-      config:
-        repoURL: ${{ vars.gitRepo }}
-        checkout:
-        - branch: main
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: ${{ vars.gitRepo }}
+          checkout:
+          - branch: main
+            path: ./src
+
+      - uses: copy
+        config:
+          inPath: ./src/env/staging/kustomization.yaml
+          outPath: ./src/env/prod/kustomization.yaml
+
+      - uses: git-commit
+        as: commit
+        config:
           path: ./src
+          message: Promote staging config to prod
 
-    - uses: copy
-      config:
-        inPath: ./src/env/staging/kustomization.yaml
-        outPath: ./src/env/prod/kustomization.yaml
+      - uses: git-push
+        config:
+          path: ./src
+          targetBranch: main
 
-    - uses: git-commit
-      as: commit
-      config:
-        path: ./src
-        message: Promote staging config to prod
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: Stage
+# metadata:
+#   name: dev
+#   namespace: 5g-network-simulation
+# spec:
+#   requestedFreight:
+#   - origin:
+#       kind: Warehouse
+#       name: 5g-sim-warehouse
+#     sources:
+#       direct: true
 
-    - uses: git-push
-      config:
-        path: ./src
-        targetBranch: main
+#   promotionTemplate:
+#     spec:
+#       vars:
+#       - name: gitRepo
+#         value: https://github.com/Nyati1/5g-simulation-v3.git
 
-      # - uses: git-create-pull-request
-      #   config:
-      #     repoURL: ${{ vars.gitRepo }}
-      #     sourceBranch: ${{ vars.prBranch }}
-      #     targetBranch: main
-      #     title: Promote staging config to prod
-      #     description: Promote validated staging configuration into production.
+#       steps:
+#       - uses: git-clone
+#         config:
+#           repoURL: ${{ vars.gitRepo }}
+#           checkout:
+#           - branch: main
+#             path: ./src
+            
+
+#       - uses: kustomize-build
+#         config:
+#           path: ./src/env/dev
+#           outPath: ./src/env/dev/manifests.yaml
+
+#       - uses: git-commit
+#         as: commit
+#         config:
+#           path: ./src
+#           message: Promote dev config staging
+
+#       - uses: git-push
+#         config:
+#           path: ./src
+#           targetBranch: main
+# ---
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: Stage
+# metadata:
+#   name: staging
+#   namespace: 5g-network-simulation
+
+# spec:
+#   requestedFreight:
+#   - origin:
+#       kind: Warehouse
+#       name: 5g-sim-warehouse
+#     sources:
+#       stages: [dev]
+
+#   promotionTemplate:
+#     spec:
+#       vars:
+#       - name: gitRepo
+#         value: https://github.com/Nyati1/5g-simulation-v3.git
+
+#       steps:
+#       - uses: git-clone
+#         config:
+#           repoURL: ${{ vars.gitRepo }}
+#           checkout:
+#           - branch: main
+#             path: ./src
+
+#       - uses: copy
+#         config:
+#           inPath: ./src/env/dev/kustomization.yaml
+#           outPath: ./src/env/staging/kustomization.yaml
+
+#       - uses: git-commit
+#         config:
+#           path: ./src
+#           message: Promote dev config to staging
+
+#       - uses: git-push
+#         config:
+#           path: ./src
+#           targetBranch: main
+# # apiVersion: kargo.akuity.io/v1alpha1
+# # kind: Stage
+# # metadata:
+# #   name: staging
+# #   namespace: 5g-network-simulation
+# # spec:
+# #   requestedFreight:
+# #   - origin:
+# #       kind: Warehouse
+# #       name: 5g-sim-warehouse
+# #     sources:
+# #       stages: [dev]
+# #   promotionTemplate:
+# #     spec:
+# #       vars:
+# #       - name: gitRepo
+# #         value: https://github.com/Nyati1/5g-simulation-v3.git
+# #       steps:
+# #       - uses: git-clone
+# #         config:
+# #           repoURL: ${{ vars.gitRepo }}
+# #           checkout:
+# #           - branch: main
+# #             path: ./src
+# #           - branch: env/staging
+# #             create: true
+# #             path: ./out
+# #       - uses: git-clear
+# #         config:
+# #           path: ./out
+# #       - uses: copy
+# #         config:
+# #           inPath: ./src/env/dev/kustomization.yaml
+# #           outPath: ./src/env/staging/kustomization.yaml
+
+# #       - uses: kustomize-build
+# #         config:
+# #           path: ./src/env/staging
+# #           outPath: ./out/manifests.yaml
+# #       - uses: git-commit
+# #         as: commit
+# #         config:
+# #           path: ./out
+# #           message: Promote dev config to staging
+# #       - uses: git-push
+# #         config:
+# #           path: ./out
+# #           targetBranch: env/staging
+    
+# ---
+# apiVersion: kargo.akuity.io/v1alpha1
+# kind: Stage
+# metadata:
+#   name: prod
+#   namespace: 5g-network-simulation
+# spec:
+#   requestedFreight:
+#   - origin:
+#       kind: Warehouse
+#       name: 5g-sim-warehouse
+#     sources:
+#       stages: [staging]
+
+#   promotionTemplate:
+#   spec:
+#     vars:
+#     - name: gitRepo
+#       value: https://github.com/Nyati1/5g-simulation-v3.git
+
+#     steps:
+#     - uses: git-clone
+#       config:
+#         repoURL: ${{ vars.gitRepo }}
+#         checkout:
+#         - branch: main
+#           path: ./src
+
+#     - uses: copy
+#       config:
+#         inPath: ./src/env/staging/kustomization.yaml
+#         outPath: ./src/env/prod/kustomization.yaml
+
+#     - uses: git-commit
+#       as: commit
+#       config:
+#         path: ./src
+#         message: Promote staging config to prod
+
+#     - uses: git-push
+#       config:
+#         path: ./src
+#         targetBranch: main
+
+#       # - uses: git-create-pull-request
+#       #   config:
+#       #     repoURL: ${{ vars.gitRepo }}
+#       #     sourceBranch: ${{ vars.prBranch }}
+#       #     targetBranch: main
+#       #     title: Promote staging config to prod
+#       #     description: Promote validated staging configuration into production.
 
