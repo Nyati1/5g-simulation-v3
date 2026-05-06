@@ -6,5 +6,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "-1"
 spec:
   promotionPolicies:
-  - stage: dev
+  - stageSelector: 
+      name: dev
     autoPromotionEnabled: true
