@@ -149,53 +149,11 @@ spec:
           path: ./out
           targetBranch: ${{ vars.prBranch }}
 
-      - uses: git-open-pr
-        config:
-          repoURL: ${{ vars.gitRepo }}
-          sourceBranch: ${{ vars.prBranch }}
-          targetBranch: main
-          title: Promote staging config to prod
-          description: Promote validated staging configuration into production.
-  # promotionTemplate:
-  #   spec:
-  #     vars:
-  #     - name: gitRepo
-  #       value: https://github.com/Nyati1/5g-simulation-v3.git
-  #     steps:
-  #     - uses: git-clone
-  #       config:
-  #         repoURL: ${{ vars.gitRepo }}
-  #         checkout:
-  #         - branch: main
-  #           path: ./src
-  #         - branch: env/prod
-  #           create: true
-  #           path: ./out
-  #     - uses: git-clear
-  #       config:
-  #         path: ./out
-  #     - uses: copy
-  #       config:
-  #         inPath: ./src/env/dev/kustomization.yaml
-  #         outPath: ./src/env/staging/kustomization.yaml
-          
-  #     - uses: kustomize-build
-  #       config:
-  #         path: ./src/env/prod
-  #         outPath: ./out/manifests.yaml
-  #     - uses: git-commit
-  #       as: commit
-  #       config:
-  #         path: ./out
-  #         message: Promote staging config to prod 
-  #     - uses: git-push
-  #       config:
-  #         path: ./out
-  #         targetBranch: env/prod
-  #     - uses: git-create-pull-request
-  #     config:
-  #       repoURL: ${{ vars.gitRepo }}
-  #       sourceBranch: ${{ vars.prBranch }}
-  #       targetBranch: env/prod
-  #       title: Promote prod config change
-  #       body: Automated promotion from staging
+      # - uses: git-create-pull-request
+      #   config:
+      #     repoURL: ${{ vars.gitRepo }}
+      #     sourceBranch: ${{ vars.prBranch }}
+      #     targetBranch: main
+      #     title: Promote staging config to prod
+      #     description: Promote validated staging configuration into production.
+
