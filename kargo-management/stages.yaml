@@ -104,50 +104,51 @@ spec:
       name: 5g-sim-warehouse
     sources:
       stages: [staging]
-    promotionTemplate:
-  spec:
-    vars:
-    - name: gitRepo
-      value: https://github.com/Nyati1/5g-simulation-v3.git
-    - name: prBranch
-      value: promote-prod-$(date +%s)
-    steps:
-    - uses: git-clone
-      config:
-        repoURL: ${{ vars.gitRepo }}
-        checkout:
-        - branch: main
-          path: ./src
-        - branch: ${{ vars.prBranch }}
-          create: true
+  promotionTemplate:
+    spec:
+      vars:
+      - name: gitRepo
+        value: https://github.com/Nyati1/5g-simulation-v3.git
+      steps:
+      - uses: git-clone
+        config:
+          repoURL: ${{ vars.gitRepo }}
+          checkout:
+          - branch: main
+            path: ./src
+          # Use a dynamic branch name for the PR source
+          - branch: env/prod-update-${{ commit }}
+            create: true
+            path: ./out
+      - uses: git-clear
+        config:
           path: ./out
-    - uses: git-clear
-      config:
-        path: ./out
-    - uses: copy
-      config:
-        inPath: ./src/env/dev/kustomization.yaml
-        outPath: ./src/env/staging/kustomization.yaml
-    - uses: kustomize-build
-      config:
-        path: ./src/env/prod
-        outPath: ./out/manifests.yaml
-    - uses: git-commit
-      config:
-        path: ./out
-        message: Promote staging config to prod
-    - uses: git-push
-      config:
-        path: ./out
-        targetBranch: ${{ vars.prBranch }}
-        create: true
-    - uses: git-create-pull-request
-      config:
-        repoURL: ${{ vars.gitRepo }}
-        sourceBranch: ${{ vars.prBranch }}
-        targetBranch: env/prod
-        title: Promote prod config change
-        body: Automated promotion from staging  
+      - uses: copy
+        config:
+          # Fixed logic: Copying from staging to prod manifests
+          inPath: ./src/env/staging/kustomization.yaml
+          outPath: ./out/kustomization.yaml
+      - uses: kustomize-build
+        config:
+          path: ./src/env/prod
+          outPath: ./out/manifests.yaml
+      - uses: git-commit
+        config:
+          path: ./out
+          message: "Promote staging config to prod: ${{ commit }}"
+      - uses: git-push
+        config:
+          path: ./out
+      - uses: git-create-pull-request
+        config:
+          repoURL: ${{ vars.gitRepo }}
+          # The sourceBranch must match the checkout branch created above
+          sourceBranch: env/prod-update-${{ commit }}
+          targetBranch: env/prod
+          title: "Promote prod config change: ${{ commit }}"
+          body: |
+            Automated promotion from staging.
+            Freight: ${{ freight.id }}
   # promotionTemplate:
   #   spec:
   #     vars:
