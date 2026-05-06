@@ -148,48 +148,34 @@ spec:
       stages: [staging]
 
   promotionTemplate:
-    spec:
-      vars:
-      - name: gitRepo
-        value: https://github.com/Nyati1/5g-simulation-v3.git
-      - name: prBranch
-        value: promote-staging-to-prod
+  spec:
+    vars:
+    - name: gitRepo
+      value: https://github.com/Nyati1/5g-simulation-v3.git
 
-      steps:
-      - uses: git-clone
-        config:
-          repoURL: ${{ vars.gitRepo }}
-          checkout:
-          - branch: main
-            path: ./src
-          - branch: ${{ vars.prBranch }}
-            create: true
-            path: ./out
+    steps:
+    - uses: git-clone
+      config:
+        repoURL: ${{ vars.gitRepo }}
+        checkout:
+        - branch: main
+          path: ./src
 
-      - uses: git-clear
-        config:
-          path: ./out
+    - uses: copy
+      config:
+        inPath: ./src/env/staging/kustomization.yaml
+        outPath: ./src/env/prod/kustomization.yaml
 
-      - uses: copy
-        config:
-          inPath: ./src
-          outPath: ./out
+    - uses: git-commit
+      as: commit
+      config:
+        path: ./src
+        message: Promote staging config to prod
 
-      - uses: copy
-        config:
-          inPath: ./src/env/staging/kustomization.yaml
-          outPath: ./out/env/prod/kustomization.yaml
-
-      - uses: git-commit
-        as: commit
-        config:
-          path: ./out
-          message: Promote staging config to prod
-
-      - uses: git-push
-        config:
-          path: ./out
-          targetBranch: ${{ vars.prBranch }}
+    - uses: git-push
+      config:
+        path: ./src
+        targetBranch: main
 
       # - uses: git-create-pull-request
       #   config:
