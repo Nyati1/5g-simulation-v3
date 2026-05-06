@@ -36,33 +36,6 @@ spec:
           prune: true
           selfHeal: true
 
-# apiVersion: argoproj.io/v1alpha1
-# kind: ApplicationSet
-# metadata:
-#   name: 5g-simulation-deployments
-#   namespace: argocd
-# spec:
-#   generators:
-#     - list:
-#         elements:
-#           - env: dev
-#           - env: staging
-#           - env: prod
-#   template:
-#     metadata:
-#       name: 'core-1-{{env}}'
-#     spec:
-#       project: default
-#       source:
-#         repoURL: https://github.com/Nyati1/5g-simulation-v3.git
-#         targetRevision: main
-#         path: 'env/{{env}}'
-#       destination:
-#         name: kargo-quickstart
-#         namespace: '5g-core-1-{{env}}'
-#       syncPolicy:
-#         automated:
-#           prune: true
-#           selfHeal: true
+
 
 
