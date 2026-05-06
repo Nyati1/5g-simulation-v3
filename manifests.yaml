@@ -6,97 +6,39 @@ kind: ConfigMap
 metadata:
   name: open5gs-config
 ---
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Stage
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: dev
-  namespace: 5g-network-simulation
+  labels:
+    app: amf
+  name: open5gs-amf
 spec:
-  promotionTemplate:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amf
+  template:
+    metadata:
+      labels:
+        app: amf
     spec:
-      steps:
-      - config:
-          checkoutBranch: main
-          kustomize:
-            images:
-            - image: docker.io/gradiant/open5gs:2.7.0
-              path: env/dev
-          outBranch: main
-          repoURL: https://github.com/Nyati1/5g-simulation-v3.git
-        uses: git-update
-      - config:
-          apps:
-          - name: 5g-sim-dev
-            namespace: argocd
-        uses: argocd-update
-  requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: 5g-sim-warehouse
-    sources:
-      direct: true
----
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Stage
-metadata:
-  name: staging
-  namespace: 5g-network-simulation
-spec:
-  promotionTemplate:
-    spec:
-      steps:
-      - config:
-          checkoutBranch: main
-          kustomize:
-            images:
-            - image: docker.io/gradiant/open5gs:2.7.0
-              path: env/staging
-          outBranch: main
-          repoURL: https://github.com/Nyati1/5g-simulation-v3.git
-        uses: git-update
-      - config:
-          apps:
-          - name: 5g-sim-staging
-            namespace: argocd
-        uses: argocd-update
-  requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: 5g-sim-warehouse
-    sources:
-      stages:
-      - dev
----
-apiVersion: kargo.akuity.io/v1alpha1
-kind: Stage
-metadata:
-  name: prod
-  namespace: 5g-network-simulation
-spec:
-  promotionTemplate:
-    spec:
-      steps:
-      - config:
-          checkoutBranch: main
-          kustomize:
-            images:
-            - image: docker.io/gradiant/open5gs:2.7.0
-              path: env/prod
-          outBranch: main
-          repoURL: https://github.com/Nyati1/5g-simulation-v3.git
-        uses: git-update
-      - config:
-          apps:
-          - name: 5g-sim-prod
-            namespace: argocd
-        uses: argocd-update
-  requestedFreight:
-  - origin:
-      kind: Warehouse
-      name: 5g-sim-warehouse
-    sources:
-      stages:
-      - staging
+      containers:
+      - args:
+        - open5gs-amfd
+        env:
+        - name: MCC
+          valueFrom:
+            configMapKeyRef:
+              key: mcc
+              name: open5gs-config
+        - name: MNC
+          valueFrom:
+            configMapKeyRef:
+              key: mnc
+              name: open5gs-config
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        name: amf
 ---
 apiVersion: apps/v1
 kind: Deployment
