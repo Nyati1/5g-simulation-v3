@@ -1,0 +1,11 @@
+apiVersion: kargo.akuity.io/v1alpha1
+kind: Warehouse
+metadata:
+  name: 5g-sim-warehouse
+  namespace: 5g-network-simulation
+spec:
+  subscriptions:
+    - git:
+        repoURL: https://github.com/Nyati1/5g-simulation-v3.git
+        branch: main
+

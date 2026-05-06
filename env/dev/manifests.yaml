@@ -1,0 +1,81 @@
+apiVersion: v1
+data:
+  mcc: "1000"
+  mnc: "104"
+kind: ConfigMap
+metadata:
+  name: open5gs-config
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: amf
+  name: open5gs-amf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amf
+  template:
+    metadata:
+      labels:
+        app: amf
+    spec:
+      containers:
+      - args:
+        - open5gs-amfd
+        env:
+        - name: MCC
+          valueFrom:
+            configMapKeyRef:
+              key: mcc
+              name: open5gs-config
+        - name: MNC
+          valueFrom:
+            configMapKeyRef:
+              key: mnc
+              name: open5gs-config
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        name: amf
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: upf
+  name: open5gs-upf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upf
+  template:
+    metadata:
+      labels:
+        app: upf
+    spec:
+      containers:
+      - args:
+        - open5gs-upfd
+        env:
+        - name: MCC
+          valueFrom:
+            configMapKeyRef:
+              key: mcc
+              name: open5gs-config
+        - name: MNC
+          valueFrom:
+            configMapKeyRef:
+              key: mnc
+              name: open5gs-config
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        name: upf
+        ports:
+        - containerPort: 2152
+          name: gtpu
+          protocol: UDP
+        securityContext:
+          privileged: true

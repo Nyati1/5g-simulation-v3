@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open5gs-upf 
+  labels:
+    app: upf  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upf  
+  template:
+    metadata:
+      labels:
+        app: upf  
+    spec:
+      containers:
+      - name: upf
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        args:
+          - open5gs-upfd  
+        securityContext:
+          privileged: true  
+        ports:
+          - containerPort: 2152
+            name: gtpu
+            protocol: UDP
+        env:
+          - name: MCC
+            valueFrom:
+              configMapKeyRef:
+                name: open5gs-config
+                key: mcc
+          - name: MNC
+            valueFrom:
+              configMapKeyRef:
+                name: open5gs-config
+                key: mnc

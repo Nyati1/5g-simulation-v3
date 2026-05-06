@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: open5gs-amf
+  labels:
+    app: amf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: amf
+  template:
+    metadata:
+      labels:
+        app: amf
+    spec:
+      containers:
+      - name: amf
+        image: docker.io/gradiant/open5gs:2.7.0
+        imagePullPolicy: IfNotPresent
+        args:
+        - open5gs-amfd
+        env:
+        - name: MCC
+          valueFrom:
+            configMapKeyRef:
+              name: open5gs-config
+              key: mcc
+        - name: MNC
+          valueFrom:
+            configMapKeyRef:
+              name: open5gs-config
+              key: mnc
