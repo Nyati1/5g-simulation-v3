@@ -10,7 +10,6 @@ spec:
       name: 5g-sim-warehouse
     sources:
       direct: true
-
   promotionTemplate:
     spec:
       vars:
