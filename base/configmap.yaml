@@ -3,5 +3,6 @@ kind: ConfigMap
 metadata:
   name: open5gs-config
 data:
-  mcc: "999"
-  mnc: "70"
+  mcc: "1000"
+  mnc: "700"
+  

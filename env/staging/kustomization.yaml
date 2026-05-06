@@ -1,6 +1,12 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-# Inheriting base logic; overrides will be added during promotion
 resources:
   - ../../base
+
+configMapGenerator:
+- name: open5gs-config
+  behavior: merge
+  literals:
+    - mcc="2000"
+    - mnc="204"
