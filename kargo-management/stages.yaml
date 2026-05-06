@@ -104,11 +104,15 @@ spec:
       name: 5g-sim-warehouse
     sources:
       stages: [staging]
+
   promotionTemplate:
     spec:
       vars:
       - name: gitRepo
         value: https://github.com/Nyati1/5g-simulation-v3.git
+      - name: prBranch
+        value: promote-staging-to-prod
+
       steps:
       - uses: git-clone
         config:
@@ -116,39 +120,42 @@ spec:
           checkout:
           - branch: main
             path: ./src
-          # Use a dynamic branch name for the PR source
-          - branch: env/prod-update-${{ commit }}
+          - branch: ${{ vars.prBranch }}
             create: true
             path: ./out
+
       - uses: git-clear
         config:
           path: ./out
+
       - uses: copy
         config:
-          # Fixed logic: Copying from staging to prod manifests
-          inPath: ./src/env/staging/kustomization.yaml
-          outPath: ./out/kustomization.yaml
-      - uses: kustomize-build
+          inPath: ./src
+          outPath: ./out
+
+      - uses: copy
         config:
-          path: ./src/env/prod
-          outPath: ./out/manifests.yaml
+          inPath: ./src/env/staging/kustomization.yaml
+          outPath: ./out/env/prod/kustomization.yaml
+
       - uses: git-commit
+        as: commit
         config:
           path: ./out
-          message: "Promote staging config to prod: ${{ commit }}"
+          message: Promote staging config to prod
+
       - uses: git-push
         config:
           path: ./out
-      - uses: git-create-pull-request
+          targetBranch: ${{ vars.prBranch }}
+
+      - uses: git-open-pr
         config:
           repoURL: ${{ vars.gitRepo }}
-          # The sourceBranch must match the checkout branch created above
-          sourceBranch: env/prod-update-${{ commit }}
-          targetBranch: env/prod
-          title: "Promote prod config change: ${{ commit }}"
-          body: |
-            Automated promotion from staging.
-            Freight: ${{ freight.id }}
+          sourceBranch: ${{ vars.prBranch }}
+          targetBranch: main
+          title: Promote staging config to prod
+          description: Promote validated staging configuration into production.
   # promotionTemplate:
   #   spec:
   #     vars:
