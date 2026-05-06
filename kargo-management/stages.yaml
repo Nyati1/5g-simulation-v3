@@ -140,3 +140,10 @@ spec:
         config:
           path: ./out
           targetBranch: env/prod
+      - uses: git-create-pull-request
+      config:
+        repoURL: ${{ vars.gitRepo }}
+        sourceBranch: ${{ vars.prBranch }}
+        targetBranch: env/prod
+        title: Promote prod config change
+        body: Automated promotion from staging
