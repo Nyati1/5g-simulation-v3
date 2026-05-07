@@ -19,15 +19,15 @@ Note, the deployment is only for minimal services with minimal parameters for de
 
 ## Core Directories
 
-*base/: Contains the foundational Kubernetes manifests (amf-deployment.yaml, configmap.yaml, upf-deployment.yaml and the base kustomization.yaml). This serves as the "source of truth" for all environments.
+* base/: Contains the foundational Kubernetes manifests (amf-deployment.yaml, configmap.yaml, upf-deployment.yaml and the base kustomization.yaml). This serves as the "source of truth" for all environments.
 
-*env/: Environment-specific overlays using Kustomize:
+* env/: Environment-specific overlays using Kustomize:
 
--dev/, staging/, prod/: Each directory contains unique configurations and patches tailored for that specific environment.
+- dev/, staging/, prod/: Each directory contains unique configurations and patches tailored for that specific environment.
 
--argocd-management/: Houses the ApplicationSet definitions used by ArgoCD to automatically bootstrap the 5G core services across the cluster.
+- argocd-management/: Houses the ApplicationSet definitions used by ArgoCD to automatically bootstrap the 5G core services across the cluster.
 
--kargo-management/: Contains the Kargo orchestration resources (project.yaml, projectconfig.yaml, stages.yaml, warehouse.yaml) used to manage versioned Freight and promote changes through the delivery pipeline.
+- kargo-management/: Contains the Kargo orchestration resources (project.yaml, projectconfig.yaml, stages.yaml, warehouse.yaml) used to manage versioned Freight and promote changes through the delivery pipeline.
 
 
 # Deployment Steps 
