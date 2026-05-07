@@ -84,7 +84,7 @@ Note, the deployment is only for minimal services with minimal parameters for de
 
 * The architecture adopts a microservices-based approach by decoupling the 5G Core into discrete functional units (AMF and UPF), enabling independent scaling and lifecycle management of the control and user planes. This design ensures that each network function can be updated or promoted through the GitOps pipeline without impacting the availability of the broader system. Although AMF and UPF are telecom network functions, in this project they are treated the same way modern applications treat microservices — independently deployed, independently configured, and promoted through environments using GitOps workflows.
 
-*Manual promotion for staging and prod environments to ensure testing and approval are completed
+* Manual promotion for staging and prod environments to ensure testing and approval are completed
 
 ### Tradeoff
 
