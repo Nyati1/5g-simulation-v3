@@ -138,4 +138,4 @@ This preserves Git as the single source of truth and provides a full audit trail
 7. Promote freight to production
 8. Observe production deployment via Argo CD
 
-################################################################################################################################################
+###################################################################################
