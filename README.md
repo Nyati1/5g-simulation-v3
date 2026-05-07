@@ -115,6 +115,7 @@ This preserves Git as the single source of truth and provides a full audit trail
 
 * Deploy a complete 5G Network infrastructure for an end-end network demo
 * Implement sync windows to ensure Argo CD does perform reconciliation outside of the maintenance window to avoid traffic disruptions.
+* Add security checks and approvals in the workflow
 
 # Example 1 Demo Scenario
 
