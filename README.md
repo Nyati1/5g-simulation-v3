@@ -76,13 +76,13 @@ Note, the deployment is only for minimal services with minimal parameters for de
 
 # Key Design Decisions
 
-*Folder-Based Environment Model: The project uses a single 'main' branch with separate environment overlays (env/dev, env/staging and env/prod). Benefits include: easier repository structure, clear promotion visibility, simpler Git History, Easier demonstration of config changes 
+* Folder-Based Environment Model: The project uses a single 'main' branch with separate environment overlays (env/dev, env/staging and env/prod). Benefits include: easier repository structure, clear promotion visibility, simpler Git History, Easier demonstration of config changes 
 
-*Namespace Isolation: Each environment has been deployed on it's own namespace. This is critical for 5G simulations because it allows running of multiple instances of the 5G core nodes on the same cluster without them interfering with each other's service discovery, networking or IP space.
+* Namespace Isolation: Each environment has been deployed on it's own namespace. This is critical for 5G simulations because it allows running of multiple instances of the 5G core nodes on the same cluster without them interfering with each other's service discovery, networking or IP space.
 
-*Automated Sync: By setting prune: true and selfHeal: true, the system is more robust e.g. if someone manually deletes a pod, Argo CD will detect the deviation from Git and immediately recreate it.
+* Automated Sync: By setting prune: true and selfHeal: true, the system is more robust e.g. if someone manually deletes a pod, Argo CD will detect the deviation from Git and immediately recreate it.
 
-*The architecture adopts a microservices-based approach by decoupling the 5G Core into discrete functional units (AMF and UPF), enabling independent scaling and lifecycle management of the control and user planes. This design ensures that each network function can be updated or promoted through the GitOps pipeline without impacting the availability of the broader system.
+* The architecture adopts a microservices-based approach by decoupling the 5G Core into discrete functional units (AMF and UPF), enabling independent scaling and lifecycle management of the control and user planes. This design ensures that each network function can be updated or promoted through the GitOps pipeline without impacting the availability of the broader system. Although AMF and UPF are telecom network functions, in this project they are treated the same way modern applications treat microservices — independently deployed, independently configured, and promoted through environments using GitOps workflows.
 
 *Manual promotion for staging and prod environments to ensure testing and approval are completed
 
@@ -113,8 +113,8 @@ This preserves Git as the single source of truth and provides a full audit trail
 
 # Future Improvements
 
-*Deploy a complete 5G Network infrastructure for an end-end network demo
-*Implement sync windows to ensure Argo CD does perform reconciliation outside of the maintenance window to avoid traffic disruptions.
+* Deploy a complete 5G Network infrastructure for an end-end network demo
+* Implement sync windows to ensure Argo CD does perform reconciliation outside of the maintenance window to avoid traffic disruptions.
 
 # Example 1 Demo Scenario
 
