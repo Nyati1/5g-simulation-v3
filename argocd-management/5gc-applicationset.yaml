@@ -13,7 +13,7 @@ spec:
           - env: staging
             project: default
           - env: prod
-            project: production
+            project: default
 
   template:
     metadata:
