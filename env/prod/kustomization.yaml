@@ -8,5 +8,5 @@ configMapGenerator:
 - name: open5gs-config
   behavior: merge
   literals:
-    - mcc="7000"
-    - mnc="704"
+    - mcc="9000"
+    - mnc="904"
